@@ -19,7 +19,8 @@ const elements = {
   btnLoading: document.querySelector('.btn-loading'),
   results: document.getElementById('results'),
   yearError: document.getElementById('year-error'),
-  genreError: document.getElementById('genre-error')
+  genreError: document.getElementById('genre-error'),
+  randomBtn: document.getElementById('randomBtn')
 };
 
 // Initialize the application
@@ -55,6 +56,8 @@ function setupEventListeners() {
   // Clear errors on focus
   elements.yearInput.addEventListener('focus', () => clearError('year'));
   elements.genreSelect.addEventListener('focus', () => clearError('genre'));
+
+  elements.randomBtn.addEventListener('click', handleRandomise);
 }
 
 async function handleFormSubmit(e) {
@@ -338,4 +341,56 @@ function showLoading() {
       <p>Fetching movie recommendations...</p>
     </div>
   `;
+}
+
+async function handleRandomise() {
+  setRandomLoading(true);
+  try {
+    // Load genres if not already loaded
+    const genresData = await fetchWithCache('/genre/movie/list');
+    const genres = genresData.genres;
+    if (!genres || genres.length === 0) {
+      showError('No genres available for randomisation.');
+      return;
+    }
+    // Pick random genre
+    const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+    // Pick random year between 1900 and current year
+    const currentYear = new Date().getFullYear();
+    const randomYear = Math.floor(Math.random() * (currentYear - 1900 + 1)) + 1900;
+    // Fetch movies for random genre and year
+    setFormFields(randomYear, randomGenre.name);
+    const movies = await getMovieRecommendations(randomYear, randomGenre.name);
+    if (movies.length === 0) {
+      displayResults([]);
+      return;
+    }
+    // Pick a single random movie from the results
+    const randomMovie = movies[Math.floor(Math.random() * movies.length)];
+    displayResults([randomMovie]);
+  } catch (error) {
+    console.error('Error during randomise:', error);
+    showError('Failed to randomise movie. Please try again.');
+  } finally {
+    setRandomLoading(false);
+  }
+}
+
+function setRandomLoading(isLoading) {
+  elements.randomBtn.disabled = isLoading;
+  const btnText = elements.randomBtn.querySelector('.btn-text');
+  const btnLoading = elements.randomBtn.querySelector('.btn-loading');
+  btnText.style.display = isLoading ? 'none' : 'inline';
+  btnLoading.style.display = isLoading ? 'inline' : 'none';
+}
+
+function setFormFields(year, genreName) {
+  elements.yearInput.value = year;
+  // Set genre select to the correct option
+  for (const option of elements.genreSelect.options) {
+    if (option.value.toLowerCase() === genreName.toLowerCase()) {
+      elements.genreSelect.value = option.value;
+      break;
+    }
+  }
 }
