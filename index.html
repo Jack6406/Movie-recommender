@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Recommender</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>🎬 Movie Recommender by Sahil🎬</h1>
+      <p>Discover great movies by year and genre</p>
+    </header>
+
+    <form id="movieForm" class="search-form" novalidate>
+      <div class="form-group">
+        <label for="year">Release Year:</label>
+        <input 
+          type="number" 
+          id="year" 
+          name="year"
+          min="1900" 
+          max="2024" 
+          placeholder="e.g., 2020"
+          required
+          aria-describedby="year-error"
+        >
+        <div id="year-error" class="error-message" role="alert"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="genre">Genre:</label>
+        <select 
+          id="genre" 
+          name="genre"
+          required
+          aria-describedby="genre-error"
+        >
+          <option value="">Select a genre...</option>
+        </select>
+        <div id="genre-error" class="error-message" role="alert"></div>
+      </div>
+
+      <button type="submit" id="submitBtn">
+        <span class="btn-text">Get Recommendations</span>
+        <span class="btn-loading" style="display: none;">
+          <span class="spinner"></span> Loading...
+        </span>
+      </button>
+    </form>
+
+    <div id="results" class="results-container" aria-live="polite"></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
