@@ -271,6 +271,37 @@ button[type="submit"]:disabled {
   transform: none;
 }
 
+/* Bigger Randomise button */
+#randomBtn {
+  width: 100%;
+  padding: 28px 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  border-radius: 18px;
+  margin-top: 18px;
+  background: linear-gradient(135deg, #ffe082 0%, #ffd54f 100%);
+  color: #222;
+  box-shadow: 0 10px 30px rgba(255, 213, 79, 0.15);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#randomBtn .btn-text {
+  font-size: 1.3rem;
+}
+
+#randomBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+#randomBtn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 18px 40px rgba(255, 213, 79, 0.25);
+}
+
 /* Loading spinner */
 .spinner {
   display: inline-block;
